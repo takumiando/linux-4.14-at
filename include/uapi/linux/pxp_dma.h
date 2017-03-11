@@ -152,6 +152,13 @@ enum pxp_engine_ctrl {
 	PXP_ENABLE_DITHER_BYPASS	= 0x2000,
 };
 
+enum pxp_op_type {
+	PXP_OP_2D			= 0x001,
+	PXP_OP_DITHER			= 0x002,
+	PXP_OP_WFE_A			= 0x004,
+	PXP_OP_WFE_B			= 0x008,
+};
+
 struct rect {
 	int top;		/* Upper left coordinate of rectangle */
 	int left;
@@ -228,6 +235,8 @@ struct pxp_proc_data {
 	unsigned char *lut_map; /* 256 entries */
 	bool lut_map_updated; /* Map recently changed */
 	bool combine_enable;
+
+	enum pxp_op_type op_type;
 
 	/* LUT cleanup */
 	u64 lut_sels;
