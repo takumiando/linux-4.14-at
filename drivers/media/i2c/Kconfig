@@ -395,6 +395,15 @@ config VIDEO_TW2804
 	  To compile this driver as a module, choose M here: the
 	  module will be called tw2804.
 
+config VIDEO_TW2984
+	tristate "Renesas TW2984 multiple video decoder"
+	depends on VIDEO_V4L2 && I2C
+	---help---
+	  Support for the Renesas tw2984 multiple video decoder.
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called tw2984.
+
 config VIDEO_TW9903
 	tristate "Techwell TW9903 video decoder"
 	depends on VIDEO_V4L2 && I2C
