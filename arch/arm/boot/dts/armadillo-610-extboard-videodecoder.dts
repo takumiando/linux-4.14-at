@@ -1,0 +1,92 @@
+/*
+ * Copyright (C) 2022 ADVALY SYSTEM Inc. All Rights Reserved.
+ *
+ * SPDX-License-Identifier: (GPL-2.0 OR MIT)
+ */
+#include "armadillo-610.dtsi"
+
+/ {
+	chosen {
+		stdout-path = &uart1;
+	};
+};
+
+&uart1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart1>;
+	status = "okay";
+};
+
+&iomuxc {
+	pinctrl-names = "default";
+
+	pinctrl_uart1: uart1grp {
+		fsl,pins = <
+			MX6UL_PAD_UART1_TX_DATA__UART1_DCE_TX 0x00008
+			MX6UL_PAD_UART1_RX_DATA__UART1_DCE_RX 0x1b0b1
+		>;
+	};
+
+	pinctrl_sd2_vmmc: sd2vmmcgrp {
+		fsl,pins = <
+			MX6UL_PAD_UART2_RTS_B__GPIO1_IO23  0x00008
+		>;
+	};
+
+	pinctrl_i2c4: i2c4grp {
+		fsl,pins = <
+			MX6UL_PAD_UART2_RX_DATA__I2C4_SDA	0x4001b8b0 // CON2_88
+			MX6UL_PAD_UART2_TX_DATA__I2C4_SCL	0x4001b8b0 // CON2_89
+		>;
+	};
+
+	pinctrl_csi1: csi1grp {
+		fsl,pins = <
+			MX6UL_PAD_CSI_MCLK__CSI_MCLK		0x1b088
+			MX6UL_PAD_CSI_PIXCLK__CSI_PIXCLK	0x1b088
+			MX6UL_PAD_CSI_VSYNC__CSI_VSYNC		0x1b088
+			MX6UL_PAD_CSI_HSYNC__CSI_HSYNC		0x1b088
+			MX6UL_PAD_CSI_DATA00__CSI_DATA02	0x1b088
+			MX6UL_PAD_CSI_DATA01__CSI_DATA03	0x1b088
+			MX6UL_PAD_CSI_DATA02__CSI_DATA04	0x1b088
+			MX6UL_PAD_CSI_DATA03__CSI_DATA05	0x1b088
+			MX6UL_PAD_CSI_DATA04__CSI_DATA06	0x1b088
+			MX6UL_PAD_CSI_DATA05__CSI_DATA07	0x1b088
+			MX6UL_PAD_CSI_DATA06__CSI_DATA08	0x1b088
+			MX6UL_PAD_CSI_DATA07__CSI_DATA09	0x1b088
+		>;
+	};
+};
+
+&csi {
+	status = "okay";
+
+	port {
+		csi1_ep: endpoint {
+			 remote-endpoint = <&tw2984_ep>;
+		};
+	};
+};
+
+&i2c4 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_i2c4>;
+	clock-frequency = <100000>;
+	status = "okay";
+
+	tw2984@29 {
+		compatible = "renesas,tw2984";
+		reg = <0x29>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_csi1>;
+		clocks = <&clks IMX6UL_CLK_CSI>;
+		clock-names = "csi_mclk";
+		status = "okay";
+
+		port {
+			tw2984_ep: endpoint {
+				remote-endpoint = <&csi1_ep>;
+			};
+		};
+	};
+};
